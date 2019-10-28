@@ -51,7 +51,26 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        idx = self._hash_mod(key)
+        head = self.storage[idx]
+        prev = None
+        new_pair = LinkedPair(key, value)
+
+        if head is not None:
+            while head is not None:
+                if head.key == key:
+                    head.value = value
+                    return
+                prev = head
+                head = head.next
+            head = new_pair
+            prev.next = head
+            return
+
+        else:
+            self.storage[idx] = new_pair
+            return
 
 
 
@@ -63,7 +82,28 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        idx = self._hash_mod(key)
+        head = self.storage[idx]
+        prev = None
+
+        while head is not None:
+            if head.key == key:
+                break
+            prev = head
+            head = head.next
+
+        if head is None:
+            print("Error: nothing to remove.")
+            return None
+
+        if prev is not None:
+            prev.next = head.next
+        else:
+            self.storage[idx] = head.next
+
+        print(f"Removed Key: {head.key} with Value: {head.value}")
+        return head.value
 
 
     def retrieve(self, key):
@@ -74,7 +114,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        idx = self._hash_mod(key)
+        head = self.storage[idx]
+
+        while head is not None:
+            if head.key == key:
+                return head.value
+
+            head = head.next
+        print("Error: Key not found")
+
+        return None
 
 
     def resize(self):
@@ -84,7 +135,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        new_cap = len(self.storage) * 2
+        new_storage = [None] * new_cap
+
+        old_storage = self.storage
+
+        self.capacity = new_cap
+        self.storage = new_storage
+
+        for item in old_storage:
+            if item is not None:
+                head = item
+                while head is not None:
+                    self.insert(head.key, head.value)
+                    head = head.next
+
+        return
 
 
 
